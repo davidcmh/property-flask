@@ -7,12 +7,14 @@
 {% block body %}
     <h1>UK Property Transactions</h1>
 
-    <form id="form" action="{{ url_for('postcode') }}" method="post">
+    <form id="form"s>
         <div class="form-group">
-            <input class="form-control" name="postcode" placeholder="Enter a UK postcode">
+            <input id="postcode-input" class="form-control" autofocus type="text" placeholder="Enter a UK postcode">
         </div>
         <div class="form-group">
             <button class="btn btn-primary">Submit</button>
         </div>
     </form>
+
+    <div id="result"></div>
 {% endblock %}
