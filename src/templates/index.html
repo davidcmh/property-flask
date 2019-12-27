@@ -1,20 +1,29 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>UK Property Transactions</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+              integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        {{ google_map.js }}
+        <script src="{{ url_for('static', filename='index.js') }}"></script>
+    </head>
+    <body>
+        <div class="container">
+            <h1>UK Property Transactions</h1>
 
-{% block title %}
-    UK Property Transactions
-{% endblock %}
+            <form id="form">
+                <div class="form-group">
+                    <p>Enter a UK postcode:</p>
+                    <input id="postcode-input" class="form-control" autofocus style="text-transform: uppercase;" type="text" placeholder="Enter a UK postcode">
+                </div>
+                <div class="form-group">
+                    <button id="submit-form" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
 
-{% block body %}
-    <h1>UK Property Transactions</h1>
+            <div id="result"></div>
 
-    <form id="form"s>
-        <div class="form-group">
-            <input id="postcode-input" class="form-control" autofocus type="text" placeholder="Enter a UK postcode">
+            {{ google_map.html }}
         </div>
-        <div class="form-group">
-            <button class="btn btn-primary">Submit</button>
-        </div>
-    </form>
-
-    <div id="result"></div>
-{% endblock %}
+    </body>
+</html>
