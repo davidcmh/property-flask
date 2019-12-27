@@ -1,8 +1,18 @@
-<html>
-    <head>
-        <title>UK Property Transactions</title>
-    </head>
-    <body>
-        <h1>Hello world</h1>
-    </body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}
+    UK Property Transactions
+{% endblock %}
+
+{% block body %}
+    <h1>UK Property Transactions</h1>
+
+    <form id="form" action="{{ url_for('postcode') }}" method="post">
+        <div class="form-group">
+            <input class="form-control" name="postcode" placeholder="Enter a UK postcode">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+{% endblock %}
