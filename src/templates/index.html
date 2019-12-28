@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
               integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         {{ google_map.js }}
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script src="{{ url_for('static', filename='index.js') }}"></script>
     </head>
     <body>
@@ -21,9 +22,11 @@
                 </div>
             </form>
 
-            <div id="result"></div>
+            <div id="address"></div>
 
             {{ google_map.html }}
+
+            <div id="transactions" style="margin-top:30px;"></div>
         </div>
     </body>
 </html>

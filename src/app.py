@@ -5,9 +5,13 @@ from flask import Flask, render_template, request, jsonify
 from flask_googlemaps import GoogleMaps, Map
 import requests
 
+from .utils import get_transactions
+
+
 app = Flask(__name__)
-app.config['GOOGLEMAPS_KEY'] = os.environ.get('GOOGLE_API_KEY')
+app.config["GOOGLEMAPS_KEY"] = os.environ.get("GOOGLE_API_KEY")
 GoogleMaps(app)
+
 
 @app.route("/")
 def index():
@@ -17,10 +21,10 @@ def index():
         identifier="google-map",
         lat=default_latlng[0],
         lng=default_latlng[1],
-        style="height:400px;width:800px;margin:0;",
+        style="height:400px;width:100%;margin:0;",
         maptype_control=False,
         fullscreen_control=False,
-        streetview_control=False
+        streetview_control=False,
     )
 
     return render_template("index.html", google_map=google_map)
@@ -36,7 +40,12 @@ def postcode():
         return jsonify({"success": False})
 
     data = res.json()
-    return jsonify({"success": True, "result": data["result"]})
+
+    transaction_df = get_transactions(data["result"]["postcode"])
+
+    return jsonify(
+        {"success": True, "address": data["result"], "transactions": transaction_df.to_dict(orient="record")}
+    )
 
 
 if __name__ == "__main__":
