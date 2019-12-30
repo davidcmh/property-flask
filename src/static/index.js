@@ -1,9 +1,10 @@
-google.charts.load('current', {packages: ['corechart', 'table']});
-
+let transactionCountByYearChart;
+let transactionPricesByYearChart;
 
 const earliestDataYear = 1995;
 const currentYear = new Date().getFullYear();
 
+google.charts.load('current', {packages: ['corechart', 'table']});
 
 const titleCase = str => {
   try {
@@ -46,8 +47,12 @@ const updateMap = (latLng) => {
 
 
 const updateTransactionCountByYearChart = chartData => {
+  if (transactionCountByYearChart) {
+    transactionCountByYearChart.destroy();
+  }
+
   const ctx = document.getElementById('transaction-count-by-year').getContext('2d');
-  const transactionCountByYearChart = new Chart(ctx, {
+  transactionCountByYearChart = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: chartData.label,
@@ -93,8 +98,11 @@ const updateTransactionCountByYearChart = chartData => {
 
 
 const updateTransactionPricesByYearChart = chartData => {
+  if (transactionPricesByYearChart) {
+    transactionPricesByYearChart.destroy();
+  }
   const ctx = document.getElementById('transaction-prices-by-year').getContext('2d');
-  const transactionPricesByYearChart = new Chart(ctx, {
+  transactionPricesByYearChart = new Chart(ctx, {
     type: 'scatter',
     data: {
       labels: 'Transaction Prices',
