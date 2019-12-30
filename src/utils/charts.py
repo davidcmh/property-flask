@@ -6,7 +6,6 @@ CURRENT_YEAR = datetime.now().year
 
 def _compute_transaction_count_by_year(transaction_df):
     df = transaction_df.copy()
-    df["year"] = transaction_df.transaction_date.str[:4]
 
     aggregated_df = df.groupby("year").count().transaction_id.reset_index()
     aggregated_df["transaction_count"] = aggregated_df.transaction_id
@@ -27,6 +26,25 @@ def _compute_transaction_count_by_year(transaction_df):
     return output
 
 
+def _compute_transaction_prices_by_year(transaction_df):
+    df = transaction_df.copy()
+
+    output = {"data": []}
+    for year, price in zip(df.year, df.price_paid):
+        try:
+            year = int(year)
+            output["data"].append({"x": year, "y": price})
+        except ValueError:
+            continue
+
+    return output
+
+
 def compute_charts_data(transaction_df):
-    charts_data = {"transactionCountByYear": _compute_transaction_count_by_year(transaction_df)}
+    """Compute data required for different charts, in the format expected by Chart.js"""
+    transaction_df["year"] = transaction_df.transaction_date.str[:4]
+    charts_data = {
+        "transactionCountByYear": _compute_transaction_count_by_year(transaction_df),
+        "transactionPricesByYear": _compute_transaction_prices_by_year(transaction_df),
+    }
     return charts_data

@@ -57,5 +57,6 @@ def get_transactions(postcode):
         raise Exception("No result was returned from transaction API.")
 
     df = _convert_csv_str_to_dataframe(result).sort_values("transaction_date", ascending=False)
+    df = df.fillna("")
 
     return df

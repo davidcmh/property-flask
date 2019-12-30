@@ -1,12 +1,20 @@
 google.charts.load('current', {packages: ['corechart', 'table']});
 
 
+const earliestDataYear = 1995;
+const currentYear = new Date().getFullYear();
+
+
 const titleCase = str => {
-  str = str.toLowerCase().split(' ');
-  for (const i in str) {
-    str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+  try {
+    str = str.toLowerCase().split(' ');
+    for (const i in str) {
+      str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+    }
+    return str.join(' ');
+  } catch (TypeError) {
+    return "";
   }
-  return str.join(' ');
 };
 
 
@@ -38,7 +46,7 @@ const updateMap = (latLng) => {
 
 
 const updateTransactionCountByYearChart = chartData => {
-  const ctx = document.getElementById('transactionCountByYear').getContext('2d');
+  const ctx = document.getElementById('transaction-count-by-year').getContext('2d');
   const transactionCountByYearChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -52,13 +60,76 @@ const updateTransactionCountByYearChart = chartData => {
       }]
     },
     options: {
+      title: {
+        display: true,
+        text: 'No. of Transactions by Year'
+      },
+      legend: {
+        display: false,
+      },
       scales: {
         yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'No. of transactions'
+          },
           ticks: {
             beginAtZero: true,
-            stepSize: 1,
-            suggestedMax: 5,
+            suggestedMax: 10,
             min: 0,
+          }
+        }],
+        xAxes: [{
+          ticks: {
+            min: earliestDataYear,
+            max: currentYear,
+            stepSize: 1
+          }
+        }]
+      }
+    }
+  });
+};
+
+
+const updateTransactionPricesByYearChart = chartData => {
+  const ctx = document.getElementById('transaction-prices-by-year').getContext('2d');
+  const transactionPricesByYearChart = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      labels: 'Transaction Prices',
+      datasets: [{
+        label: 'Transaction Price',
+        data: chartData.data,
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Transaction Prices by Year'
+      },
+      legend: {
+        display: false,
+      },
+      scales: {
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Transaction Price (£)'
+          },
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+          }
+        }],
+        xAxes: [{
+          ticks: {
+            min: earliestDataYear,
+            max: currentYear,
+            stepSize: 1
           }
         }]
       }
@@ -69,6 +140,7 @@ const updateTransactionCountByYearChart = chartData => {
 
 const updateCharts = charts => {
   updateTransactionCountByYearChart(charts.transactionCountByYear);
+  updateTransactionPricesByYearChart(charts.transactionPricesByYear);
 };
 
 
@@ -135,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = JSON.parse(request.responseText);
 
       if (data.success) {
-        updateAddress(data.address)
+        updateAddress(data.address);
         updateMap({lat: data.address.latitude, lng: data.address.longitude});
         updateCharts(data.charts);
         updateTransactionTable(data.transactions);
