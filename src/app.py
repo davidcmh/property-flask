@@ -5,8 +5,8 @@ from flask import Flask, render_template, request, jsonify
 from flask_googlemaps import GoogleMaps, Map
 import requests
 
-from .utils import get_transactions
-
+from src.utils.transactions import get_transactions
+from src.utils.charts import compute_charts_data
 
 app = Flask(__name__)
 app.config["GOOGLEMAPS_KEY"] = os.environ.get("GOOGLE_API_KEY")
@@ -42,9 +42,15 @@ def postcode():
     data = res.json()
 
     transaction_df = get_transactions(data["result"]["postcode"])
+    charts_data = compute_charts_data(transaction_df)
 
     return jsonify(
-        {"success": True, "address": data["result"], "transactions": transaction_df.to_dict(orient="record")}
+        {
+            "success": True,
+            "address": data["result"],
+            "transactions": transaction_df.to_dict(orient="record"),
+            "charts": charts_data,
+        }
     )
 
 

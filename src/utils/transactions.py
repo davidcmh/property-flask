@@ -38,7 +38,7 @@ form_data_template = {
 }
 
 
-def convert_csv_str_to_dataframe(csv_str):
+def _convert_csv_str_to_dataframe(csv_str):
     f = StringIO(csv_str)
     df = pd.read_csv(f)
     return df
@@ -56,6 +56,6 @@ def get_transactions(postcode):
     if result is None:
         raise Exception("No result was returned from transaction API.")
 
-    df = convert_csv_str_to_dataframe(result).sort_values("transaction_date", ascending=False)
+    df = _convert_csv_str_to_dataframe(result).sort_values("transaction_date", ascending=False)
 
     return df

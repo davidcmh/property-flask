@@ -37,6 +37,41 @@ const updateMap = (latLng) => {
 };
 
 
+const updateTransactionCountByYearChart = chartData => {
+  const ctx = document.getElementById('transactionCountByYear').getContext('2d');
+  const transactionCountByYearChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: chartData.label,
+      datasets: [{
+        label: 'No. of Transactions',
+        data: chartData.data,
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            stepSize: 1,
+            suggestedMax: 5,
+            min: 0,
+          }
+        }]
+      }
+    }
+  });
+};
+
+
+const updateCharts = charts => {
+  updateTransactionCountByYearChart(charts.transactionCountByYear);
+};
+
+
 const updateTransactionTable = transactions => {
   const options = {
     showRowNumber: true,
@@ -102,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data.success) {
         updateAddress(data.address)
         updateMap({lat: data.address.latitude, lng: data.address.longitude});
+        updateCharts(data.charts);
         updateTransactionTable(data.transactions);
       }
       else {
