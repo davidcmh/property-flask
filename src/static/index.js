@@ -196,7 +196,7 @@ const updateTransactionTable = transactions => {
 
 const pollForMapInitialisation = () => {
   if (map !== null) {
-    document.querySelector('#submit-form').click();
+    document.querySelector('#submit-button').click();
   } else {
     setTimeout(pollForMapInitialisation, 100);
   }
@@ -219,11 +219,12 @@ document.addEventListener('DOMContentLoaded', () => {
         updateMap({lat: data.address.latitude, lng: data.address.longitude});
         updateCharts(data.charts);
         updateTransactionTable(data.transactions);
+        document.querySelector('#error-msg').innerHTML = '';
       }
       else {
-        document.querySelector('#address').innerHTML = 'There was an error.';
+        document.querySelector('#error-msg').innerHTML = 'Error: ' + data.errorMessage;
+        document.querySelector('#error-msg').style.color = '#CD0618';
       }
-
     };
 
     const data = new FormData();
@@ -232,6 +233,14 @@ document.addEventListener('DOMContentLoaded', () => {
     request.send(data);
 
     return false;
+  };
+
+  document.querySelector('#postcode-input').onkeyup = () => {
+    if (document.getElementById("postcode-input").value === "") {
+      document.getElementById('submit-button').disabled = true;
+    } else {
+      document.getElementById('submit-button').disabled = false;
+    }
   };
 
   // initialise page with default postcode

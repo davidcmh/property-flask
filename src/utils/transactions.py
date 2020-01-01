@@ -38,9 +38,14 @@ form_data_template = {
 }
 
 
+class InvalidTransactionsResponseError(Exception):
+    pass
+
+
 def _convert_csv_str_to_dataframe(csv_str):
     f = StringIO(csv_str)
     df = pd.read_csv(f)
+    df = df.fillna("")
     return df
 
 
@@ -50,13 +55,12 @@ def get_transactions(postcode):
     form_data["q"] = form_data["q"].format(postcode=postcode)
     r = requests.post("http://landregistry.data.gov.uk/app/root/qonsole/query", data=form_data)
     if r.status_code != 200:
-        raise Exception("Failed to execute transaction API.")
+        raise InvalidTransactionsResponseError
 
-    result = r.json().get("result")
-    if result is None:
-        raise Exception("No result was returned from transaction API.")
+    result = r.json().get("result", None)
+    if result is None or result == "":
+        raise InvalidTransactionsResponseError
 
     df = _convert_csv_str_to_dataframe(result).sort_values("transaction_date", ascending=False)
-    df = df.fillna("")
 
     return df

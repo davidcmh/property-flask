@@ -1,0 +1,1 @@
+GENERIC_ERROR_MSG = "There is an error. Please try again."
